@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cors from 'cors';
-
+import { config } from 'dotenv';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +11,7 @@ async function bootstrap() {
     origin: '*', // Permitir acesso de qualquer origem
     credentials: true, // Permite envio de cookies entre domínios
   }));
-  
+  config();
   await app.listen(3030);
 }
 bootstrap();

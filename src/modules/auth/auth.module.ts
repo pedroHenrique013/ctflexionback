@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -8,13 +7,14 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { LoginValidationMiddleware } from './middlewares/login-validation.middleware';
+
 @Module({
   imports: [
     UserModule,
     PassportModule,
     JwtModule.register({
       secret: 'jwt-secret',
-      signOptions: { expiresIn: '30d' },
+      signOptions: { expiresIn: '1m' },
     }),
   ],
   controllers: [AuthController],

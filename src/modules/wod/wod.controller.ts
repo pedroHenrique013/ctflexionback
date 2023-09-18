@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Delete, Param} from '@nestjs/common';
 import { WodService } from './wod.service';
 import { CreateWodDto } from './dto/create-wod.dto';
 import { Wod } from './entities/wod.entity';
@@ -22,6 +22,13 @@ export class WodController {
   @Post('create')
   async createWod(@Body() createWodDto: CreateWodDto) {
     const { title, description, date } = createWodDto;
-    return this.wodService.createWod(title, description, date);
+    return this.wodService.createWod(title, description);
+  }
+
+  @IsPublic()
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async deleteWod(@Param('id') id: number) {
+    return this.wodService.deleteWod(id);
   }
 }

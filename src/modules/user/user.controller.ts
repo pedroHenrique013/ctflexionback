@@ -30,7 +30,6 @@ export class UserController {
     @Body() createUserDto: CreateUserDto,
   ): Promise<{ message: string; user: User }> {
     const { email } = createUserDto;
-
     const existingUser = await this.userService.findByEmail(email);
 
     if (existingUser) {

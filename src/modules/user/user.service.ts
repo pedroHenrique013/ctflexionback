@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/user.entity';
@@ -13,9 +12,9 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { name, email, password} = createUserDto;
+    const { password, ...userData } = createUserDto;
     const hashedPassword = await bcrypt.hash(password, 10);
-    return this.userModel.create({ name, email, password: hashedPassword});
+    return this.userModel.create({ ...userData, password: hashedPassword });
   }
 
   async findAllUsers(): Promise<User[]> {
@@ -29,7 +28,7 @@ export class UserService {
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.findByEmail(email);
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user && await bcrypt.compare(password, user.password)) {
       return user;
     }
 
@@ -37,7 +36,7 @@ export class UserService {
   }
 
   async deleteUser(id: number): Promise<boolean> {
-    const deletedUser = await this.userModel.destroy({ where: { id } });
-    return deletedUser > 0;
+    const deletedRows = await this.userModel.destroy({ where: { id } });
+    return deletedRows > 0;
   }
 }
