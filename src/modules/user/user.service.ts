@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+
 
 @Injectable()
 export class UserService {
@@ -38,5 +40,20 @@ export class UserService {
   async deleteUser(id: number): Promise<boolean> {
     const deletedRows = await this.userModel.destroy({ where: { id } });
     return deletedRows > 0;
+  }
+
+  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
+    const user = await this.userModel.findByPk(id);
+
+    if (!user) {
+      return null;
+    }
+
+    // Atualize a chave 'time' com o novo valor
+    user.time = updateUserDto.time;
+
+    await user.save(); // Salve as alterações no banco de dados
+
+    return user;
   }
 }

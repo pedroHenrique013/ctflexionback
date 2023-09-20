@@ -8,11 +8,13 @@ import {
   Param,
   NotFoundException,
   UseGuards,
+  Patch,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import { IsPublic } from '../auth/decorators/is-public.decorator';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UserController {
@@ -56,5 +58,16 @@ export class UserController {
     return {
       message: `User with ID ${id} deleted successfully`,
     };
+  }
+
+  @Patch(':id')
+  async updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+    const updatedUser = await this.userService.updateUser(id, updateUserDto);
+
+    if (updatedUser) {
+      return { message: 'Usuário atualizado com sucesso', user: updatedUser };
+    } else {
+      return { message: 'Usuário não encontrado' };
+    }
   }
 }
