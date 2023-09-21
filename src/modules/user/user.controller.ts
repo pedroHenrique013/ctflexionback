@@ -18,7 +18,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @IsPublic()
   @Get('all')
@@ -60,14 +60,15 @@ export class UserController {
     };
   }
 
+  @IsPublic()
   @Patch(':id')
-  async updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    const updatedUser = await this.userService.updateUser(id, updateUserDto);
+  async updateTime(@Param('id') id: number, @Body() updateDto: UpdateUserDto) {
+    const updatedUser = await this.userService.updateTime(id, updateDto.time);
 
     if (updatedUser) {
-      return { message: 'Usuário atualizado com sucesso', user: updatedUser };
+      return { message: 'Tempo atualizado com sucesso', user: updatedUser };
     } else {
-      return { message: 'Usuário não encontrado' };
+      throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
     }
   }
 }

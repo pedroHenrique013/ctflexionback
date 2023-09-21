@@ -23,4 +23,6 @@ export class CreateUserDto extends User {
   name: string;
 
   time?: string;
+
+  stars?: string;
 }

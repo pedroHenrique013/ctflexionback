@@ -24,4 +24,7 @@ export class User extends Model {
 
   @Column
   time?: string;
+
+  @Column
+  stars?: string;
 }

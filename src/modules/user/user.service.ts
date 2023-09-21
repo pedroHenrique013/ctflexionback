@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entities/user.entity';
@@ -16,7 +17,8 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { password, ...userData } = createUserDto;
     const hashedPassword = await bcrypt.hash(password, 10);
-    return this.userModel.create({ ...userData, password: hashedPassword });
+    const initialTime = '31:00';
+    return this.userModel.create({ ...userData, password: hashedPassword, time: initialTime });
   }
 
   async findAllUsers(): Promise<User[]> {
@@ -42,18 +44,19 @@ export class UserService {
     return deletedRows > 0;
   }
 
-  async updateUser(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
+  async updateTime(id: number, time: string): Promise<User | null> {
     const user = await this.userModel.findByPk(id);
-
+  
     if (!user) {
       return null;
     }
-
-    // Atualize a chave 'time' com o novo valor
-    user.time = updateUserDto.time;
-
+  
+    user.time = time;
+  
     await user.save(); // Salve as alterações no banco de dados
-
+  
     return user;
   }
+  
+
 }

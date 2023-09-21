@@ -13,12 +13,15 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async login(user: User): Promise<{ access_token: string }> {
-    const { id, email, name } = user;
-    const payload: UserPayload = { sub: id, email, name };
+  async login(user: User): Promise<{ access_token: string, user: User }> {
+  const { id, email, name } = user;
+  const payload: UserPayload = { sub: id, email, name };
 
-    return { access_token: this.jwtService.sign(payload)};
-  }
+  const access_token = this.jwtService.sign(payload);
+
+  return { access_token, user };
+}
+
 
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.userService.findByEmail(email);
